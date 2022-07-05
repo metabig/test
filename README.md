@@ -1,3 +1,5 @@
 # Django Blog
 
-This repository contains the code after following the guide: https://argentinaenpython.com/django-girls/tutorial/
+This repository contains the code after following the guide: https://tutorial.djangogirls.org/es/
+
+Django version: 3.2.10
