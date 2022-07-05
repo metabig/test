@@ -1,5 +1,5 @@
 #!/bin/bash
-git add .
+git add --all .
 git commit -m "$1"
 git remote set-url origin git@github.com:metabig/test.git
 git push
