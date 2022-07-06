@@ -1,9 +1,11 @@
 {% load static %}
+<!DOCTYPE html>
 <html lang="es">
     <head>
         <meta name="description"
-              content="This is an example of a meta description. This will often show up in search results."/>
-        <meta name="keywords" content="Contenido asignado"/>
+              content="Django girls blog example"/>
+        <meta charset=UTF-8/>
+        <meta name="keywords" content="blog"/>
         <title>Django Girls blog</title>
         <link rel="stylesheet" href="{% static 'css/blog.css' %}"/>
         <!-- CSS only -->
@@ -24,10 +26,11 @@
                 <header class="blog-header lh-1 py-3">
                     <div class="row flex-nowrap justify-content-between align-items-center">
                         <div class="col-4 pt-1">
+                        {% if user.is_authenticated %}
                             <a class="link-secondary" href="{% url 'post_new' %}">Add post</a>
-                        </div>
+                        {% endif %}</div>
                         <div class="col-4 text-center">
-                            <a class="blog-header-logo text-dark" href="{% url 'post_list' %}">Django Girls Blogs</a>
+                            <a class="blog-header-logo text-dark text-decoration-none" href="{% url 'post_list' %}">Django Girls Blogs</a>
                         </div>
                         <div class="col-4 d-flex justify-content-end align-items-center">
                             <a class="link-secondary" href="#" aria-label="Search">

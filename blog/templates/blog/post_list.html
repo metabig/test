@@ -2,9 +2,40 @@
 {% block content %}
   {% for post in posts %}
     <article class="blog-post">
-      <h2 class="blog-post-title mb-1"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+      <h2 class="blog-post-title mb-1">
+        <a class="text-reset text-decoration-none"
+           href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+      </h2>
       <p class="blog-post-meta">Published: {{ post.published_date }}</p>
       <p>{{ post.text|linebreaksbr }}</p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'post_edit' pk=post.pk %}">
+          <button class="btn btn-outline-dark">Edit</button>
+        </a>
+      {% endif %}
     </article>
   {% endfor %}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page=1">1</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page=2">2</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page=3">3</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next">
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 {% endblock content %}
