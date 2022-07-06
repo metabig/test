@@ -1,13 +1,11 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 
 from blog.forms import PostForm
-from .models import Post
+from .models import Post, PostUpdate
 from django.views.generic.list import ListView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, DeleteView
 from django.views.generic import DetailView, CreateView
 
 
@@ -18,16 +16,16 @@ class postList(ListView):
     template_name = 'blog/post_list.html'
 
     def get_queryset(self):
-        return Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+        return Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
 
 
 class postDetail(DetailView):
     model = Post
-    #context_object_name: 'post'
 
-# def post_detail(request, pk):
-#     post = get_object_or_404(Post, pk=pk)
-#     return render(request, 'blog/post_detail.html', {'post': post})
+    def get_context_data(self, **kwargs):
+        context = super(postDetail, self).get_context_data(**kwargs)
+        context['updates'] = PostUpdate.objects.filter(post=context['post'])
+        return context
 
 
 class postCreate(CreateView):
@@ -36,15 +34,15 @@ class postCreate(CreateView):
     form_class = PostForm
 
     def form_valid(self, form):
-        print(form)
         form.instance.author = self.request.user
-        form.instance.published_date = timezone.now()
         result = super().form_valid(form)
+        update = PostUpdate(
+            post=self.object, update_date=timezone.now(), author=self.request.user)
+        update.save()
         return result
 
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.object.pk})
-        # return HttpResponseRedirect(reverse('post_detail', kwargs={'pk': self.object.pk}))
 
 
 class postUpdate(UpdateView):
@@ -52,5 +50,25 @@ class postUpdate(UpdateView):
     template_name_suffix = '_edit'
     form_class = PostForm
 
+    def form_valid(self, form):
+        now = timezone.now()
+        form.instance.author = self.request.user
+        result = super().form_valid(form)
+        update = PostUpdate(
+            post=self.object, update_date=now, author=self.request.user)
+        update.save()
+        return result
+
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.object.pk})
+
+
+class postDelete(DeleteView):
+    model = Post
+    success_url = "/"
+
+
+def post_publish(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.publish()
+    return redirect('post_detail', pk=pk)

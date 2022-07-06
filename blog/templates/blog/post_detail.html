@@ -1,12 +1,17 @@
 {% extends "blog/base.html" %}
 {% block content %}
     <article class="blog-post">
-        {% if post.published_date %}
         <h2 class="blog-post-title mb-1">
-            <a class="text-decoration-none text-reset" href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+            <a class="text-decoration-none text-reset"
+               href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
         </h2>
+        {% if post.published_date %}
+            <p class="blog-post-meta">Last update: {{ post.published_date }} by {{ post.author }}</p>
         {% endif %}
-        <p class="blog-post-meta">Published: {{ post.published_date }}</p>
         <p>{{ post.text|linebreaksbr }}</p>
+        <h3>Post Updates:</h3>
+        <ul>
+            {% for update in updates %}<li>{{ update }}</li>{% endfor %}
+        </ul>
     </article>
 {% endblock content %}
