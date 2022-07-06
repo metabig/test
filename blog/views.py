@@ -3,8 +3,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.utils import timezone
+
+from blog.forms import PostForm
 from .models import Post
-from .forms import PostForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
 from django.views.generic import DetailView, CreateView
@@ -32,20 +33,24 @@ class postDetail(DetailView):
 class postCreate(CreateView):
     model = Post
     template_name = 'blog/post_edit.html'
-    fields = ["title", "text"]
+    form_class = PostForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user
-        self.object.published_date = timezone.now()
-        self.object.save()
-        return HttpResponseRedirect(reverse('post_detail', kwargs={'pk': self.object.pk}))
+        print(form)
+        form.instance.author = self.request.user
+        form.instance.published_date = timezone.now()
+        result = super().form_valid(form)
+        return result
+
+    def get_success_url(self):
+        return reverse('post_detail', kwargs={'pk': self.object.pk})
+        # return HttpResponseRedirect(reverse('post_detail', kwargs={'pk': self.object.pk}))
 
 
 class postUpdate(UpdateView):
     model = Post
     template_name_suffix = '_edit'
-    fields = ["title", "text"]
+    form_class = PostForm
 
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.object.pk})
