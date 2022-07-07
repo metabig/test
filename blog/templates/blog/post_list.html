@@ -1,6 +1,7 @@
 {% extends "blog/base.html" %}
 {% block content %}
   {% for post in posts %}
+    {% if post.published_date or user.is_authenticated %}
     <article class="blog-post">
       <h2 class="blog-post-title mb-1">
         <a class="text-reset text-decoration-none"
@@ -31,6 +32,7 @@
         {% endif %}
       {% endif %}
     </article>
+    {% endif %}
   {% endfor %}
   {% block pagination %}
     {% if is_paginated %}
