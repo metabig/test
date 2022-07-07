@@ -39,4 +39,4 @@ class PostUpdate(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "At {time} by {author}".format(time=self.update_date, author=self.author)
+        return "At {self.update_date} by {self.author}"
