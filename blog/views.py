@@ -13,7 +13,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 
-class postList(ListView):
+class PostList(ListView):
     model = Post
     context_object_name = 'posts'
     paginate_by = 10
@@ -23,7 +23,7 @@ class postList(ListView):
         return Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
 
 
-class postListByAuthor(ListView):
+class PostListByAuthor(ListView):
     model = Post
     context_object_name = 'posts'
     paginate_by = 10
@@ -35,7 +35,7 @@ class postListByAuthor(ListView):
         return Post.objects.filter(author=target_author)
 
 
-class postListByCategory(ListView):
+class PostListByCategory(ListView):
     model = Post
     context_object_name = 'posts'
     paginate_by = 10
@@ -47,16 +47,16 @@ class postListByCategory(ListView):
         return Post.objects.filter(category=target_category)
 
 
-class postDetail(DetailView):
+class PostDetail(DetailView):
     model = Post
 
     def get_context_data(self, **kwargs):
-        context = super(postDetail, self).get_context_data(**kwargs)
+        context = super(PostDetail, self).get_context_data(**kwargs)
         context['updates'] = PostUpdate.objects.filter(post=context['post'])
         return context
 
 
-class postCreate(CreateView):
+class PostCreate(CreateView):
     model = Post
     template_name = 'blog/post_edit.html'
     form_class = PostForm
@@ -73,7 +73,7 @@ class postCreate(CreateView):
         return reverse('post_detail', kwargs={'pk': self.object.pk})
 
 
-class postUpdate(UpdateView):
+class PostUpdate(UpdateView):
     model = Post
     template_name_suffix = '_edit'
     form_class = PostForm
@@ -91,7 +91,7 @@ class postUpdate(UpdateView):
         return reverse('post_detail', kwargs={'pk': self.object.pk})
 
 
-class postDelete(DeleteView):
+class PostDelete(DeleteView):
     model = Post
     success_url = "/"
 
