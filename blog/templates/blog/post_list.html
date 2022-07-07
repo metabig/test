@@ -2,36 +2,40 @@
 {% block content %}
   {% for post in posts %}
     {% if post.published_date or user.is_authenticated %}
-    <article class="blog-post">
-      <h2 class="blog-post-title mb-1">
-        <a class="text-reset text-decoration-none"
-           href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
-      </h2>
-      <p class="blog-post-meta">
-        Created: {{ post.created_date }}.
-        {% if post.published_date %}
-          Last update: {{ post.published_date }} by {{ post.author }}
-        {% else %}
-          NOT PUBLISHED
+      <article class="blog-post">
+        <h2 class="blog-post-title mb-1">
+          <a class="text-reset text-decoration-none"
+             href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+        </h2>
+        {% if post.category.id %}
+          <a class="badge bg-secondary text-decoration-none"
+             href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
         {% endif %}
-      </p>
-      <p>{{ post.text|linebreaksbr }}</p>
-      {% if user.is_authenticated %}
-        <a class="text-decoration-none" href="{% url 'post_edit' pk=post.pk %}">
-          <button class="btn btn-outline-dark">Edit</button>
-        </a>
-        <a class="text-decoration-none"
-           href="{% url 'post_delete' pk=post.pk %}">
-          <button class="btn btn-outline-dark">Delete</button>
-        </a>
-        {% if not post.published_date %}
-          <a class="text-decoration-none"
-             href=" {% url 'post_publish' pk=post.pk %}">
-            <button class="btn btn-outline-dark">Publish</button>
+        <p class="blog-post-meta">
+          Created: {{ post.created_date }}.
+          {% if post.published_date %}
+            Last update: {{ post.published_date }} by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author }}</a>
+          {% else %}
+            NOT PUBLISHED
+          {% endif %}
+        </p>
+        <p>{{ post.text|linebreaksbr }}</p>
+        {% if user.is_authenticated %}
+          <a class="text-decoration-none" href="{% url 'post_edit' pk=post.pk %}">
+            <button class="btn btn-outline-dark">Edit</button>
           </a>
+          <a class="text-decoration-none"
+             href="{% url 'post_delete' pk=post.pk %}">
+            <button class="btn btn-outline-dark">Delete</button>
+          </a>
+          {% if not post.published_date %}
+            <a class="text-decoration-none"
+               href=" {% url 'post_publish' pk=post.pk %}">
+              <button class="btn btn-outline-dark">Publish</button>
+            </a>
+          {% endif %}
         {% endif %}
-      {% endif %}
-    </article>
+      </article>
     {% endif %}
   {% endfor %}
   {% block pagination %}

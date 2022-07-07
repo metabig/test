@@ -5,6 +5,10 @@
             <a class="text-decoration-none text-reset"
                href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
         </h2>
+        {% if post.category.id %}
+          <a class="badge bg-secondary text-decoration-none"
+             href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
+        {% endif %}
         {% if post.published_date %}
             <p class="blog-post-meta">Last update: {{ post.published_date }} by {{ post.author }}</p>
         {% endif %}
