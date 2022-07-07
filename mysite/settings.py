@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "debug_toolbar",
+    'django_filters',
     'crispy_forms',
     'crispy_bootstrap5',
     'blog.apps.BlogConfig',
@@ -110,7 +111,7 @@ INTERNAL_IPS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'en-en'
 
 TIME_ZONE = 'Europe/Madrid'
 

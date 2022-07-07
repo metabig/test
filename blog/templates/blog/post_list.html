@@ -8,6 +8,8 @@
              href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
         </h2>
         {% if post.category.id %}
+          {% comment %} <a class="badge bg-secondary text-decoration-none"
+             href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a> {% endcomment %}
           <a class="badge bg-secondary text-decoration-none"
              href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
         {% endif %}

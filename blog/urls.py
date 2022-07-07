@@ -1,9 +1,11 @@
 from django.urls import path
+
+from blog.models import Post
 from . import views
 
 urlpatterns = [
-    path('', views.postList.as_view(), name='post_list'),
-    path('posts', views.postList.as_view(), name='post_list'),
+    path('', views.post_list, name='post_filter'),
+    path('posts',views.post_list, name='post_filter'),
     path('post/<int:pk>/', views.postDetail.as_view(), name='post_detail'),
     path('post/new/', views.postCreate.as_view(), name='post_new'),
     path('post/<int:pk>/edit/', views.postUpdate.as_view(), name='post_edit'),

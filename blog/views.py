@@ -2,6 +2,7 @@ from unicodedata import category
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from blog.filters import PostFilter
 
 from blog.forms import PostForm
 from .models import Category, Post, PostUpdate
@@ -99,3 +100,9 @@ def post_publish(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.publish()
     return redirect('post_detail', pk=pk)
+
+def post_list(request):
+    f = PostFilter(request.GET, queryset=Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date'))
+    return render(request, 'blog/post_filter.html', {'filter': f})
+
+
