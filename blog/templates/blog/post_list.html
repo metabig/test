@@ -8,8 +8,7 @@
              href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
         </h2>
         {% if post.category.id %}
-          {% comment %} <a class="badge bg-secondary text-decoration-none"
-             href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a> {% endcomment %}
+          {% comment %} <a class="badge bg-secondary text-decoration-none" href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a> {% endcomment %}
           <a class="badge bg-secondary text-decoration-none"
              href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
         {% endif %}
@@ -22,21 +21,17 @@
           {% endif %}
         </p>
         <p>{{ post.text|linebreaksbr }}</p>
-        {% if user.is_authenticated %}
-          <a class="text-decoration-none" href="{% url 'post_edit' pk=post.pk %}">
-            <button class="btn btn-outline-dark">Edit</button>
-          </a>
-          <a class="text-decoration-none"
-             href="{% url 'post_delete' pk=post.pk %}">
-            <button class="btn btn-outline-dark">Delete</button>
-          </a>
-          {% if not post.published_date %}
-            <a class="text-decoration-none"
-               href=" {% url 'post_publish' pk=post.pk %}">
-              <button class="btn btn-outline-dark">Publish</button>
-            </a>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          {% if user.is_authenticated %}
+            <a class="btn btn-outline-dark" href="{% url 'post_edit' pk=post.pk %}">Edit</a>
+            <a class="btn btn-outline-dark"
+               href="{% url 'post_delete' pk=post.pk %}">Delete</a>
+            {% if not post.published_date %}
+              <a class="btn btn-outline-dark"
+                 href=" {% url 'post_publish' pk=post.pk %}">Publish</a>
+            {% endif %}
           {% endif %}
-        {% endif %}
+        </div>
       </article>
     {% endif %}
   {% endfor %}

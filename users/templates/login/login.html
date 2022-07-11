@@ -1,0 +1,21 @@
+{% extends "login/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h2>Log in</h2>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Log in</button>
+          </form>
+          <a href="{% url 'password_reset' %}">Forgot your password?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
