@@ -6,8 +6,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LoginView, LogoutView
-
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from users.forms import SignUpForm
 from users.tokens import AccountActivationTokenGenerator, account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
@@ -15,7 +14,6 @@ from django.shortcuts import render, redirect
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
-
 
 def signup(request):
     if request.method == 'POST':
@@ -71,3 +69,6 @@ class userLogin(LoginView):
 
 class userLogout(LogoutView):
     template_name = 'login/logout.html'
+
+class userResetPassword(PasswordResetView):
+    template_name = 'login/reset_password.html'
