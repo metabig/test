@@ -23,6 +23,7 @@ class Post(models.Model):
         blank=True, null=True)
     category = models.ForeignKey(
         Category, default=None, blank=True, null=True, on_delete=models.CASCADE)
+    related_posts = models.ManyToManyField('self', default=None, blank=True)
 
     def publish(self):
         self.published_date = timezone.now()

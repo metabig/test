@@ -55,6 +55,7 @@ class PostDetail(DetailView):
         context = super(PostDetail, self).get_context_data(**kwargs)
         context['updates'] = PostUpdateModel.objects.filter(
             post=context['post'])
+        context['related_posts'] = context['post'].related_posts.all()
         return context
 
 

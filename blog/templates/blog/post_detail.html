@@ -6,13 +6,17 @@
                href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
         </h2>
         {% if post.category.id %}
-          <a class="badge bg-secondary text-decoration-none"
-             href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
+            <a class="badge bg-secondary text-decoration-none"
+               href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
         {% endif %}
         {% if post.published_date %}
             <p class="blog-post-meta">Last update: {{ post.published_date }} by {{ post.author }}</p>
         {% endif %}
         <p>{{ post.text|linebreaksbr }}</p>
+        <h3>Related Posts:</h3>
+        <ul>
+            {% for related in related_posts %}<li><a href="{% url 'post_detail' pk=related.pk %}">{{ related.title }}</a></li>{% endfor %}
+        </ul>
         <h3>Post Updates:</h3>
         <ul>
             {% for update in updates %}<li>{{ update }}</li>{% endfor %}
