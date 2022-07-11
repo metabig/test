@@ -5,7 +5,8 @@ from django.utils import timezone
 from blog.filters import PostFilter
 
 from blog.forms import PostForm
-from .models import Category, Post, PostUpdate
+from .models import Category, Post
+from .models import PostUpdate as PostUpdateModel
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, DeleteView
 from django.views.generic import DetailView, CreateView
@@ -52,7 +53,8 @@ class PostDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PostDetail, self).get_context_data(**kwargs)
-        context['updates'] = PostUpdate.objects.filter(post=context['post'])
+        context['updates'] = PostUpdateModel.objects.filter(
+            post=context['post'])
         return context
 
 
@@ -64,7 +66,7 @@ class PostCreate(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         result = super().form_valid(form)
-        update = PostUpdate(
+        update = PostUpdateModel(
             post=self.object, update_date=timezone.now(), author=self.request.user)
         update.save()
         return result
@@ -82,7 +84,7 @@ class PostUpdate(UpdateView):
         now = timezone.now()
         form.instance.author = self.request.user
         result = super().form_valid(form)
-        update = PostUpdate(
+        update = PostUpdateModel(
             post=self.object, update_date=now, author=self.request.user)
         update.save()
         return result
@@ -101,8 +103,8 @@ def post_publish(request, pk):
     post.publish()
     return redirect('post_detail', pk=pk)
 
+
 def post_list(request):
-    f = PostFilter(request.GET, queryset=Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date'))
+    f = PostFilter(request.GET, queryset=Post.objects.filter(
+        created_date__lte=timezone.now()).order_by('-created_date'))
     return render(request, 'blog/post_filter.html', {'filter': f})
-
-
