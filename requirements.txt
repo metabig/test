@@ -4,3 +4,4 @@ django-crispy-forms
 django-filter
 django-debug-toolbar
 django_utils_six
+django-mptt
