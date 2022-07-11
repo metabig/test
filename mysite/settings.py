@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'blog.apps.BlogConfig',
     'users.apps.UsersConfig',
+    'mptt'
 ]
 
 MIDDLEWARE = [

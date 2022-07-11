@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load mptt_tags %}
 {% block content %}
     <article class="blog-post">
         <h2 class="blog-post-title mb-1">
@@ -15,11 +16,57 @@
         <p>{{ post.text|linebreaksbr }}</p>
         <h3>Related Posts:</h3>
         <ul>
-            {% for related in related_posts %}<li><a href="{% url 'post_detail' pk=related.pk %}">{{ related.title }}</a></li>{% endfor %}
+            {% for related in related_posts %}
+                <li>
+                    <a href="{% url 'post_detail' pk=related.pk %}">{{ related.title }}</a>
+                </li>
+            {% endfor %}
         </ul>
-        <h3>Post Updates:</h3>
-        <ul>
-            {% for update in updates %}<li>{{ update }}</li>{% endfor %}
-        </ul>
-    </article>
+        <h3>Comments:</h3>
+        {% recursetree comments %}
+        <div class="card reset-font-style mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ node.author }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ node.created_date }}</h6>
+                <p class="card-text">{{ node.text }}</p>
+                {% if user.is_authenticated %}
+                    <div class="mb-4">
+                        <a class="card-link" href="{% url 'post_detail_reply' pk=post.pk reply=node.id %}">Reply</a>
+                    </div>
+                    {% if reply == node.id %}
+                        <form method="post"
+                              action="{% url 'post_comment' pk=post.pk comment_id=node.id %}"
+                              class="post-form">
+                            {% csrf_token %}
+                            <label>Comment post</label>
+                            <input type="text"
+                                   name="text"
+                                   maxlength="200"
+                                   class="textinput textInput form-control"/>
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Comment!</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                {% if not node.is_leaf_node %}{{ children }}{% endif %}
+            </div>
+        </div>
+    {% endrecursetree %}
+    {% if user.is_authenticated %}
+        <form method="post"
+              action="{% url 'post_comment' pk=post.pk comment_id=-1 %}"
+              class="post-form mb-5">
+            {% csrf_token %}
+            <label>Comment post</label>
+            <input type="text"
+                   name="text"
+                   maxlength="200"
+                   class="textinput textInput form-control"/>
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Comment!</button>
+        </form>
+    {% endif %}
+    <h3>Post Updates:</h3>
+    <ul>
+        {% for update in updates %}<li>{{ update }}</li>{% endfor %}
+    </ul>
+</article>
 {% endblock content %}

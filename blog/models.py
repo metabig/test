@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Category(models.Model):
@@ -34,6 +35,24 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(MPTTModel):
+    text = models.CharField(max_length=50)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE,
+                            null=True, blank=True, related_name='children')
+    post = models.ForeignKey(
+        Post, default=None, blank=True, null=True, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None, null=True, blank=True)
+    created_date = models.DateTimeField(
+        default=timezone.now)
+
+    class MPTTMeta:
+        order_insertion_by = ['text']
+
+    def __str__(self):
+        return self.text
 
 
 class PostUpdate(models.Model):

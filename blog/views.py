@@ -5,7 +5,7 @@ from django.utils import timezone
 from blog.filters import PostFilter
 
 from blog.forms import PostForm
-from .models import Category, Post
+from .models import Category, Comment, Post
 from .models import PostUpdate as PostUpdateModel
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, DeleteView
@@ -52,10 +52,17 @@ class PostDetail(DetailView):
     model = Post
 
     def get_context_data(self, **kwargs):
+
         context = super(PostDetail, self).get_context_data(**kwargs)
+        if 'reply' in self.kwargs:
+            context['reply'] = self.kwargs['reply']
+        else:
+            context['reply'] = -1
         context['updates'] = PostUpdateModel.objects.filter(
             post=context['post'])
         context['related_posts'] = context['post'].related_posts.all()
+        context['comments'] = Comment.objects.filter(
+            post=context['post'])
         return context
 
 
@@ -109,3 +116,17 @@ def post_list(request):
     f = PostFilter(request.GET, queryset=Post.objects.filter(
         created_date__lte=timezone.now()).order_by('-created_date'))
     return render(request, 'blog/post_filter.html', {'filter': f})
+
+def post_comment(request, pk, comment_id):
+    text = request.POST.get('text')
+    post = get_object_or_404(Post, pk=pk)
+    author = get_object_or_404(get_user_model(), pk=request.user.id)
+    if comment_id != '-1':
+        parent = get_object_or_404(Comment, pk=comment_id)
+        comment = Comment(text=text, post=post, author=author, parent=parent)
+        comment.save()
+    else:
+        comment = Comment(text=text, post=post, author=author)
+        comment.save()
+
+    return redirect('post_detail', pk=pk)
