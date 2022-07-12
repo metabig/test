@@ -1,0 +1,10 @@
+{% if list and title %}
+    <h3>{{ custom_title_text }} {{ title }}:</h3>        
+    <ul>
+        {% for post in list %}
+            <li>
+                <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

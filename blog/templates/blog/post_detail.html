@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load custom_tags %}
 {% block content %}
     <article class="blog-post">
         <h2 class="blog-post-title mb-1">
@@ -10,7 +11,7 @@
                href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
         {% endif %}
         {% if post.published_date %}
-            <p class="blog-post-meta">Last update: {{ post.published_date }} by {{ post.author }}</p>
+            <p class="blog-post-meta">Last update: {{ post.published_date }} by {{ post.author|formal_name }}</p>
         {% endif %}
         <p>{{ post.text|linebreaksbr }}</p>
         {% include "blog/postDetail/related_posts.html" with related_posts=related_posts %}
@@ -19,5 +20,7 @@
             {% include "blog/postDetail/comment_post_form.html" with pk=post.pk comment_id=-1 %}
         {% endif %}
         {% include "blog/postDetail/post_updates_list.html" with updates=updates %}
+        {% more_about "category" title=post.category %}
+        {% more_about "author" title=post.author|formal_name custom_title_text="More by" %}
     </article>
 {% endblock content %}

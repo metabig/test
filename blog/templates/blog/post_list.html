@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load custom_tags %}
 {% block content %}
   {% if filter %}
     {% include "blog/post_filter.html" with filter=filter %}
@@ -18,7 +19,7 @@
         <p class="blog-post-meta">
           Created: {{ post.created_date|timesince }} ago.
           {% if post.published_date %}
-            Last update: {{ post.published_date|timesince }} ago by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author }}</a>
+            Last update: {{ post.published_date|timesince }} ago by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author|upper }}</a>
           {% else %}
             NOT PUBLISHED
           {% endif %}
