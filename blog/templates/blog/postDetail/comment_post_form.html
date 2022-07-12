@@ -1,0 +1,11 @@
+<form method="post"
+      action="{% url 'post_comment' pk=post.pk comment_id=comment_id %}"
+      class="post-form mb-5">
+    {% csrf_token %}
+    <label>Comment post</label>
+    <input type="text"
+           name="text"
+           maxlength="200"
+           class="textinput textInput form-control"/>
+    <button type="submit" class="btn btn-sm btn-outline-secondary">Comment!</button>
+</form>

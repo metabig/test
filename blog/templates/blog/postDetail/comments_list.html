@@ -1,0 +1,21 @@
+{% load mptt_tags %}
+<h3>Comments:</h3>
+{% recursetree comments %}
+<div class="card reset-font-style mb-4">
+    <div class="card-body">
+        <h5 class="card-title">{{ node.author }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ node.created_date }}</h6>
+        <p class="card-text">{{ node.text }}</p>
+        {% if user.is_authenticated %}
+            <div class="mb-4">
+                <a class="card-link"
+                   href="{% url 'post_detail_reply' pk=post.pk reply=node.id %}">Reply</a>
+            </div>
+            {% if reply == node.id %}
+                {% include "blog/postDetail/comment_post_form.html" with pk=post.pk comment_id=node.id %}
+            {% endif %}
+        {% endif %}
+        {% if not node.is_leaf_node %}{{ children }}{% endif %}
+    </div>
+</div>
+{% endrecursetree %}

@@ -24,7 +24,7 @@
                         NOT PUBLISHED
                     {% endif %}
                 </p>
-                <p>{{ post.text|linebreaksbr }}</p>
+                <p>{{ post.text|linebreaksbr|truncatechars:240 }}</p>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     {% if user.is_authenticated %}
                         <a class="btn btn-outline-dark" href="{% url 'post_edit' pk=post.pk %}">Edit</a>
