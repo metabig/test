@@ -1,42 +1,5 @@
-{% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
-{% block content %}
-    <form method="get">
-        {{ filter.form|crispy }}
-        <button type="submit" class="btn btn-sm btn-outline-secondary">Search</button>
-    </form>
-    {% for post in filter.qs %}
-        {% if post.published_date or user.is_authenticated %}
-            <article class="blog-post">
-                <h2 class="blog-post-title mb-1">
-                    <a class="text-reset text-decoration-none"
-                       href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
-                </h2>
-                {% if post.category.id %}
-                    <a class="badge bg-secondary text-decoration-none"
-                       href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
-                {% endif %}
-                <p class="blog-post-meta">
-                    Created: {{ post.created_date }}.
-                    {% if post.published_date %}
-                        Last update: {{ post.published_date }} by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author }}</a>
-                    {% else %}
-                        NOT PUBLISHED
-                    {% endif %}
-                </p>
-                <p>{{ post.text|linebreaksbr }}</p>
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    {% if user.is_authenticated %}
-                        <a class="btn btn-outline-dark" href="{% url 'post_edit' pk=post.pk %}">Edit</a>
-                        <a class="btn btn-outline-dark"
-                           href="{% url 'post_delete' pk=post.pk %}">Delete</a>
-                        {% if not post.published_date %}
-                            <a class="btn btn-outline-dark"
-                               href=" {% url 'post_publish' pk=post.pk %}">Publish</a>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </article>
-        {% endif %}
-    {% endfor %}
-{% endblock content %}
+<form method="get" class="mb-5">
+    {{ filter.form|crispy }}
+    <button type="submit" class="btn btn-sm btn-outline-secondary">Search</button>
+</form>

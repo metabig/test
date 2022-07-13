@@ -115,7 +115,7 @@ def post_publish(request, pk):
 def post_list(request):
     f = PostFilter(request.GET, queryset=Post.objects.filter(
         created_date__lte=timezone.now()).order_by('-created_date'))
-    return render(request, 'blog/post_filter.html', {'filter': f})
+    return render(request, 'blog/post_list.html', {'filter': f, 'posts': f.qs})
 
 def post_comment(request, pk, comment_id):
     text = request.POST.get('text')

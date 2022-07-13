@@ -1,0 +1,8 @@
+<h3>Related Posts:</h3>
+<ul>
+    {% for related in related_posts %}
+        <li>
+            <a href="{% url 'post_detail' pk=related.pk %}">{{ related.title }}</a>
+        </li>
+    {% endfor %}
+</ul>

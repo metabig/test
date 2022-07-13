@@ -1,5 +1,9 @@
 {% extends "blog/base.html" %}
+{% load custom_tags %}
 {% block content %}
+  {% if filter %}
+    {% include "blog/post_filter.html" with filter=filter %}
+  {% endif %}
   {% for post in posts %}
     {% if post.published_date or user.is_authenticated %}
       <article class="blog-post">
@@ -13,14 +17,14 @@
              href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
         {% endif %}
         <p class="blog-post-meta">
-          Created: {{ post.created_date }}.
+          Created: {{ post.created_date|timesince }} ago.
           {% if post.published_date %}
-            Last update: {{ post.published_date }} by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author }}</a>
+            Last update: {{ post.published_date|timesince }} ago by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author|upper }}</a>
           {% else %}
             NOT PUBLISHED
           {% endif %}
         </p>
-        <p>{{ post.text|linebreaksbr }}</p>
+        <p>{{ post.text|linebreaksbr|truncatechars:240 }}</p>
         <div class="btn-group" role="group" aria-label="Basic example">
           {% if user.is_authenticated %}
             <a class="btn btn-outline-dark" href="{% url 'post_edit' pk=post.pk %}">Edit</a>
