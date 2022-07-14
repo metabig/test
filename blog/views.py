@@ -1,4 +1,5 @@
-from django.forms import BaseInlineFormSet
+from django.contrib.auth.decorators import login_required
+from django.forms import BaseInlineFormSet, formset_factory
 from django.forms import BaseModelFormSet, ValidationError, inlineformset_factory, modelformset_factory
 from unicodedata import category
 from django.forms import ValidationError
@@ -8,7 +9,7 @@ from django.utils import timezone
 from extra_views import InlineFormSetFactory, InlineFormSetView, ModelFormSetView
 from blog.filters import PostFilter
 
-from blog.forms import PostForm
+from blog.forms import PostForm, PostFormPublished
 from blog.formsets import BasePostFormSet
 from .models import Category, Comment, Post
 from .models import PostUpdate as PostUpdateModel
@@ -46,6 +47,7 @@ class categoryList(ListView):
     model = Category
     context_object_name = 'categories'
     template_name = 'blog/categories_list.html'
+
 
 class PostListByCategory(ListView):
     model = Post
@@ -148,28 +150,41 @@ class CategoryInline(InlineFormSetFactory):
     model = Category
     fields = ['name']
 
-# Formsets and inline formsets from scratch
 
+#############################################
+# Formsets and inline formsets from scratch #
+#############################################
+# TODO: Use django-extra-views
+
+@login_required(login_url='/users/login')
 def formset(request):
-    PostFormSet = modelformset_factory(
-        Post, fields=('author', 'title', 'category', 'text',), extra=2)
-    queryset = Post.objects.filter(author=request.user)
+    PostFormSet = formset_factory(
+        PostFormPublished, extra=2)
+    def is_published(val):
+        val['published'] = (val.get('published_date') != None)
+        return val
+
+    initial_values = map(is_published, Post.objects.filter(reviewer=request.user).values())
+    formset = PostFormSet(initial=[*initial_values])
+
+    # queryset = Post.objects.filter(reviewer=request.user)
     if request.method == "POST":
         formset = PostFormSet(
-            request.POST, request.FILES,
-            queryset=queryset,
+            request.POST, request.FILES
         )
         if formset.is_valid():
             for form in formset:
                 data = form.cleaned_data
-                # breakpoint()
-                if len(data) and data.get('author') != request.user:
-                    form.add_error('author', ValidationError("You are not allowed to change the post author"))
+                if len(data):
+                    # TODO: Improve security, only reviews can really publish
+                    if data.get('author') != request.user:
+                        form.add_error('author', ValidationError(
+                            "You are not allowed to change the post author"))
             if formset.errors:
                 return render(request, 'blog/formset.html', {'formset': formset})
             formset.save()
-    else:
-        formset = PostFormSet(queryset=queryset)
+    # else:
+    #     formset = PostFormSet(queryset=queryset)
     return render(request, 'blog/formset.html', {'formset': formset})
 
 

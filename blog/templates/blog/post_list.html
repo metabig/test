@@ -29,7 +29,7 @@
             <a class="btn btn-outline-dark" href="{% url 'post_edit' pk=post.pk %}">Edit</a>
             <a class="btn btn-outline-dark"
                href="{% url 'post_delete' pk=post.pk %}">Delete</a>
-            {% if not post.published_date %}
+            {% if not post.published_date and user == post.reviewer %}
               <a class="btn btn-outline-dark"
                  href=" {% url 'post_publish' pk=post.pk %}">Publish</a>
             {% endif %}
