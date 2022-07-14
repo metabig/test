@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form|crispy }}
+            <hr class="mt-5"/>
+            <hr class="mb-5"/>
+        {% endfor %}
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock content %}

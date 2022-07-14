@@ -12,14 +12,13 @@
              href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
         </h2>
         {% if post.category.id %}
-          {% comment %} <a class="badge bg-secondary text-decoration-none" href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a> {% endcomment %}
           <a class="badge bg-secondary text-decoration-none"
              href="{% url 'post_by_category' pk=post.category.id %}">{{ post.category }}</a>
         {% endif %}
         <p class="blog-post-meta">
           Created: {{ post.created_date|timesince }} ago.
           {% if post.published_date %}
-            Last update: {{ post.published_date|timesince }} ago by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author|upper }}</a>
+            Last update: {{ post.published_date|timesince }} ago by <a href="{% url 'post_by_author' pk=post.author.id %}">{{ post.author|formal_name }}</a>
           {% else %}
             NOT PUBLISHED
           {% endif %}

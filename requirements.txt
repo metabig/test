@@ -5,3 +5,4 @@ django-filter
 django-debug-toolbar
 django_utils_six
 django-mptt
+django-extra-views
